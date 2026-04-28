@@ -86,7 +86,6 @@
             box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
         }
 
-        /* Unique Gradients for Agent Icons */
         .icon-vector { background: linear-gradient(135deg, #FF9500, #FF5E3A); }
         .icon-raster { background: linear-gradient(135deg, #34C759, #28A745); }
         .icon-pasda { background: linear-gradient(135deg, #007AFF, #0056B3); }
@@ -141,12 +140,22 @@
             background-color: #e5e5ea;
             margin: 4px 0;
         }
-        
+
         .citation {
             font-size: 11px;
             color: #a1a1a6;
             margin-top: auto;
             word-break: break-all;
+        }
+
+        .citation a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .citation a:hover {
+            text-decoration: underline;
         }
 
         .api-links {
@@ -172,13 +181,6 @@
             background-color: var(--btn-hover);
         }
 
-        .global-api {
-            max-width: 1200px;
-            margin: 0 auto 24px;
-            padding: 0 20px;
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
     </style>
 </head>
 <body>
@@ -187,15 +189,9 @@
         <h1>Registered Agents in GAS</h1>
         <h2>Geospatial Agentic Services</h2>
     </header>
-    
-    <section class="global-api">
-        Unified API:
-        <a class="api-link" href="./api/getcapabilities.json">GAS GetCapabilities</a>
-    </section>
 
     <main class="container">
-        
-        <!-- VectorAnalysisAgent -->
+
         <article class="card">
             <div class="card-header">
                 <div class="icon icon-vector">📐</div>
@@ -205,31 +201,23 @@
                 </div>
             </div>
             <div class="divider"></div>
-            <p class="description">Autonomous vector spatial analysis agent that analyzes vector datasets by writing and executing Python code.</p>
-            <div class="api-links">
-                <a class="api-link" href="./api/agents/vector-analysis-agent.json">DescribeAgent</a>
-            </div>
-            <p class="citation">Source: VectorAnalysisAgent.py</p>
+            <p class="description">This agent performs vector-based spatial analysis and transformation using code-driven workflows. It supports operations such as clipping, joining, buffering, intersecting, distance analysis, filtering, and aggregation. It can return either GeoJSON for spatial outputs or CSV for tabular outputs derived from the analysis.</p>
+            <p class="citation">Source: <a href="http://localhost:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agentFile=vector_analysis_agent">http://localhost:4040/gas?SERVICE=GAS&amp;VERSION=1.0.0&amp;REQUEST=DescribeAgent&amp;agentFile=vector_analysis_agent</a></p>
         </article>
 
-        <!-- RasterAgent -->
         <article class="card">
             <div class="card-header">
                 <div class="icon icon-raster">🏔️</div>
                 <div class="title-group">
                     <h3 class="title">RasterAgent</h3>
-                    <p class="version">Version 1.2.0</p>
+                    <p class="version">Version 1.0.0</p>
                 </div>
             </div>
             <div class="divider"></div>
-            <p class="description">Autonomous raster processing agent powered by an LLM and rasterio. Supports reprojection, alignment, clipping, and band math.</p>
-            <div class="api-links">
-                <a class="api-link" href="./api/agents/raster-agent.json">DescribeAgent</a>
-            </div>
-            <p class="citation">Source: RasterAgent.py</p>
+            <p class="description">This agent performs raster-focused and mixed raster-vector spatial analysis through code-driven execution. It supports tasks such as clipping, raster calculations, terrain-style operations, rasterization, and combined raster-vector workflows. It returns outputs in formats appropriate to the result, such as GeoTIFF for raster products or GeoJSON for vector products.</p>
+            <p class="citation">Source: <a href="http://localhost:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agentFile=raster_agent">http://localhost:4040/gas?SERVICE=GAS&amp;VERSION=1.0.0&amp;REQUEST=DescribeAgent&amp;agentFile=raster_agent</a></p>
         </article>
 
-        <!-- PasdaAgent -->
         <article class="card">
             <div class="card-header">
                 <div class="icon icon-pasda">🔍</div>
@@ -239,14 +227,10 @@
                 </div>
             </div>
             <div class="divider"></div>
-            <p class="description">An autonomous spatial data engineer working with PASDA (Pennsylvania Spatial Data Access) to find and download GIS datasets using the ArcGIS REST API.</p>
-            <div class="api-links">
-                <a class="api-link" href="./api/agents/pasda-agent.json">DescribeAgent</a>
-            </div>
-            <p class="citation">Source: PasdaAgent.py</p>
+            <p class="description">This agent specializes in discovering and downloading Pennsylvania geospatial data from PASDA services. It can inspect available services, review candidate layers, sample their attributes, and retrieve the selected layer as GeoJSON. It is the preferred option when the requested data is likely to exist within PASDA.</p>
+            <p class="citation">Source: <a href="http://localhost:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agentFile=pasda_agent">http://localhost:4040/gas?SERVICE=GAS&amp;VERSION=1.0.0&amp;REQUEST=DescribeAgent&amp;agentFile=pasda_agent</a></p>
         </article>
 
-        <!-- MappingAgent -->
         <article class="card">
             <div class="card-header">
                 <div class="icon icon-mapping">📍</div>
@@ -256,31 +240,23 @@
                 </div>
             </div>
             <div class="divider"></div>
-            <p class="description">An Data Visualization Agent that generates charts and maps with proper symbology.</p>
-            <div class="api-links">
-                <a class="api-link" href="./api/agents/mapping-agent.json">DescribeAgent</a>
-            </div>
-            <p class="citation">Source: MappingAgent.py</p>
+            <p class="description">This agent creates visual outputs from prepared datasets, including maps and charts, and writes the result as a PNG image. It chooses an appropriate visualization style from the task and available data structure. It is most useful at the final presentation stage of a workflow when analysis results need to be communicated clearly.</p>
+            <p class="citation">Source: <a href="http://localhost:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agentFile=mapping_agent">http://localhost:4040/gas?SERVICE=GAS&amp;VERSION=1.0.0&amp;REQUEST=DescribeAgent&amp;agentFile=mapping_agent</a></p>
         </article>
 
-        <!-- MapProjectionAgent -->
         <article class="card">
             <div class="card-header">
                 <div class="icon icon-projection">🌐</div>
                 <div class="title-group">
                     <h3 class="title">MapProjectionAgent</h3>
-                    <p class="version">Version 2.0.0</p>
+                    <p class="version">Version 1.0.0</p>
                 </div>
             </div>
             <div class="divider"></div>
-            <p class="description">An autonomous GIS projection agent that determines the most appropriate Coordinate Reference System (CRS) for a given geographic location and applies it to the datasets.</p>
-            <div class="api-links">
-                <a class="api-link" href="./api/agents/map-projection-agent.json">DescribeAgent</a>
-            </div>
-            <p class="citation">Source: MapProjectionAgent.py</p>
+            <p class="description">This agent determines an appropriate coordinate reference system for a spatial task based on the user request and the dataset context. It evaluates candidate CRS options and applies the selected transformation to a single vector dataset. It is intended for reprojection tasks where CRS choice affects spatial accuracy and analysis quality.</p>
+            <p class="citation">Source: <a href="http://localhost:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agentFile=map_projection_agent">http://localhost:4040/gas?SERVICE=GAS&amp;VERSION=1.0.0&amp;REQUEST=DescribeAgent&amp;agentFile=map_projection_agent</a></p>
         </article>
 
-        <!-- DataRetrieverAgent -->
         <article class="card">
             <div class="card-header">
                 <div class="icon icon-retriever">📥</div>
@@ -290,11 +266,8 @@
                 </div>
             </div>
             <div class="divider"></div>
-            <p class="description">An agent that retrieves data by utilizing methods to download from sources like OpenStreetMap, Census Bureau, or various APIs.</p>
-            <div class="api-links">
-                <a class="api-link" href="./api/agents/data-retriever-agent.json">DescribeAgent</a>
-            </div>
-            <p class="citation">Source: DataRetrieverAgent.py</p>
+            <p class="description">This agent interprets a user data request, matches it to the most suitable supported source, and uses the handbook guidance for that source. It generates and executes download logic, then normalizes the output into a usable geospatial dataset. It is best suited for general-purpose data acquisition from supported external sources.</p>
+            <p class="citation">Source: <a href="http://localhost:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agentFile=data_retriever_agent">http://localhost:4040/gas?SERVICE=GAS&amp;VERSION=1.0.0&amp;REQUEST=DescribeAgent&amp;agentFile=data_retriever_agent</a></p>
         </article>
 
     </main>
