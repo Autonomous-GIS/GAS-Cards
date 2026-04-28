@@ -1,0 +1,37 @@
+{
+  "service": "GAS",
+  "version": "1.0.0",
+  "request": "GetCapabilities",
+  "title": "Geospatial Agentic Services Unified API",
+  "description": "Unified static API for GAS agents in a WMS-like style with JSON payloads.",
+  "endpoints": {
+    "GetCapabilities": "https://autonomous-gis.github.io/GAS-Cards/api/getcapabilities.json",
+    "DescribeAgentTemplate": "https://autonomous-gis.github.io/GAS-Cards/api/agents/{agentFile}.json"
+  },
+  "agents": [
+    {
+      "agentName": "VectorAnalysisAgent",
+      "describeUrl": "https://autonomous-gis.github.io/GAS-Cards/api/agents/vector-analysis-agent.json"
+    },
+    {
+      "agentName": "RasterAgent",
+      "describeUrl": "https://autonomous-gis.github.io/GAS-Cards/api/agents/raster-agent.json"
+    },
+    {
+      "agentName": "PasdaAgent",
+      "describeUrl": "https://autonomous-gis.github.io/GAS-Cards/api/agents/pasda-agent.json"
+    },
+    {
+      "agentName": "MappingAgent",
+      "describeUrl": "https://autonomous-gis.github.io/GAS-Cards/api/agents/mapping-agent.json"
+    },
+    {
+      "agentName": "MapProjectionAgent",
+      "describeUrl": "https://autonomous-gis.github.io/GAS-Cards/api/agents/map-projection-agent.json"
+    },
+    {
+      "agentName": "DataRetrieverAgent",
+      "describeUrl": "https://autonomous-gis.github.io/GAS-Cards/api/agents/data-retriever-agent.json"
+    }
+  ]
+}

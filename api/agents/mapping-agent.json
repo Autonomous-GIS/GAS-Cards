@@ -1,0 +1,60 @@
+{
+  "agentId": "mapping_agent",
+  "agentName": "MappingAgent",
+  "description": "Geospatial visualization agent for maps/charts with map template generation and image output workflows.",
+  "version": "2.0.1",
+  "modelDefault": null,
+  "sourceMapping": {
+    "repository": "GAS",
+    "sourceFile": "Agents/Main/MappingAgent.py",
+    "className": "MappingAgent",
+    "serviceFile": "Agents/Services/MappingAgentService.py"
+  },
+  "operations": [
+    "map",
+    "chart",
+    "render",
+    "choropleth",
+    "overlay"
+  ],
+  "input": {
+    "taskMetadata": [
+      "query",
+      "dataset_paths",
+      "skill (optional)"
+    ]
+  },
+  "output": {
+    "format": "A2A task response",
+    "artifacts": "Produced by shared task success response builder"
+  },
+  "runtime": {
+    "framework": "Flask"
+  },
+  "skills": [
+    {
+      "skill_id": "geovisualization",
+      "task_families": [
+        "visualization",
+        "cartography"
+      ]
+    },
+    {
+      "skill_id": "map_generation",
+      "task_families": [
+        "visualization"
+      ]
+    }
+  ],
+  "geoa2a": {
+    "agent_type": "geovisualization",
+    "supported_data_types": [
+      "vector",
+      "raster",
+      "table"
+    ],
+    "supported_formats": [
+      "PNG"
+    ]
+  }
+}

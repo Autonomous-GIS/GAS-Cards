@@ -148,6 +148,37 @@
             margin-top: auto;
             word-break: break-all;
         }
+
+        .api-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .api-link {
+            display: inline-block;
+            text-decoration: none;
+            background-color: var(--btn-bg);
+            color: var(--accent-color);
+            border-radius: 12px;
+            padding: 6px 10px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+
+        .api-link:hover {
+            background-color: var(--btn-hover);
+        }
+
+        .global-api {
+            max-width: 1200px;
+            margin: 0 auto 24px;
+            padding: 0 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -156,6 +187,11 @@
         <h1>Registered Agents in GAS</h1>
         <h2>Geospatial Agentic Services</h2>
     </header>
+    
+    <section class="global-api">
+        Unified API:
+        <a class="api-link" href="./api/getcapabilities.json">GAS GetCapabilities</a>
+    </section>
 
     <main class="container">
         
@@ -170,6 +206,9 @@
             </div>
             <div class="divider"></div>
             <p class="description">Autonomous vector spatial analysis agent that analyzes vector datasets by writing and executing Python code.</p>
+            <div class="api-links">
+                <a class="api-link" href="./api/agents/vector-analysis-agent.json">DescribeAgent</a>
+            </div>
             <p class="citation">Source: VectorAnalysisAgent.py</p>
         </article>
 
@@ -184,6 +223,9 @@
             </div>
             <div class="divider"></div>
             <p class="description">Autonomous raster processing agent powered by an LLM and rasterio. Supports reprojection, alignment, clipping, and band math.</p>
+            <div class="api-links">
+                <a class="api-link" href="./api/agents/raster-agent.json">DescribeAgent</a>
+            </div>
             <p class="citation">Source: RasterAgent.py</p>
         </article>
 
@@ -198,6 +240,9 @@
             </div>
             <div class="divider"></div>
             <p class="description">An autonomous spatial data engineer working with PASDA (Pennsylvania Spatial Data Access) to find and download GIS datasets using the ArcGIS REST API.</p>
+            <div class="api-links">
+                <a class="api-link" href="./api/agents/pasda-agent.json">DescribeAgent</a>
+            </div>
             <p class="citation">Source: PasdaAgent.py</p>
         </article>
 
@@ -212,6 +257,9 @@
             </div>
             <div class="divider"></div>
             <p class="description">An Data Visualization Agent that generates charts and maps with proper symbology.</p>
+            <div class="api-links">
+                <a class="api-link" href="./api/agents/mapping-agent.json">DescribeAgent</a>
+            </div>
             <p class="citation">Source: MappingAgent.py</p>
         </article>
 
@@ -226,6 +274,9 @@
             </div>
             <div class="divider"></div>
             <p class="description">An autonomous GIS projection agent that determines the most appropriate Coordinate Reference System (CRS) for a given geographic location and applies it to the datasets.</p>
+            <div class="api-links">
+                <a class="api-link" href="./api/agents/map-projection-agent.json">DescribeAgent</a>
+            </div>
             <p class="citation">Source: MapProjectionAgent.py</p>
         </article>
 
@@ -240,6 +291,9 @@
             </div>
             <div class="divider"></div>
             <p class="description">An agent that retrieves data by utilizing methods to download from sources like OpenStreetMap, Census Bureau, or various APIs.</p>
+            <div class="api-links">
+                <a class="api-link" href="./api/agents/data-retriever-agent.json">DescribeAgent</a>
+            </div>
             <p class="citation">Source: DataRetrieverAgent.py</p>
         </article>
 
