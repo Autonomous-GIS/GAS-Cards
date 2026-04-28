@@ -1,0 +1,69 @@
+{
+  "agentId": "raster_agent",
+  "agentName": "RasterAgent",
+  "description": "Adaptive raster and mixed raster-vector analysis agent with executable Python workflows and persistent runtime artifact registry.",
+  "version": "3.0.0",
+  "modelDefault": "gpt-4o-2024-05-13",
+  "sourceMapping": {
+    "repository": "GAS",
+    "sourceFile": "Agents/Main/RasterAgent.py",
+    "className": "RasterAgent",
+    "serviceFile": "Agents/Services/RasterAgentService.py"
+  },
+  "operations": [
+    "clip",
+    "mask",
+    "raster_math",
+    "contour",
+    "slope",
+    "overlay",
+    "sample",
+    "rasterize"
+  ],
+  "input": {
+    "taskMetadata": [
+      "query",
+      "dataset_paths",
+      "skill (optional)"
+    ]
+  },
+  "output": {
+    "format": "A2A task response",
+    "artifacts": "Produced by shared task success response builder"
+  },
+  "runtime": {
+    "framework": "Flask"
+  },
+  "skills": [
+    {
+      "skill_id": "raster_spatial_analysis",
+      "task_families": [
+        "spatial_analysis",
+        "raster_processing"
+      ]
+    },
+    {
+      "skill_id": "mixed_raster_vector_analysis",
+      "task_families": [
+        "spatial_analysis"
+      ]
+    }
+  ],
+  "geoa2a": {
+    "agent_type": "spatial_analysis",
+    "supported_data_types": [
+      "raster",
+      "vector",
+      "table"
+    ],
+    "supported_formats": [
+      "TIF",
+      "GeoJSON",
+      "CSV"
+    ],
+    "raster_types": [
+      "GeoTIFF",
+      "VRT"
+    ]
+  }
+}
