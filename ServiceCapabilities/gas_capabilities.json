@@ -11,35 +11,35 @@
 			"name": "Zhenlong Li",
 			"email":"zhenlong@psu.edu"
 		}
-   }
+   },
   "endpoints": {
-    "GetCapabilities": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=GetCapabilities",
-    "DescribeAgent": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent={agentName}"
+    "GetCapabilities": "https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=GetCapabilities",
+    "DescribeAgent": "https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent={agentName}"
   },
   "agents": [
     {
       "agentName": "DataRetrieverAgent",
-      "describeUrl": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=DataRetrieverAgent"
+      "describeUrl": "https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=data_retriever_agent"
     },
     {
       "agentName": "MapProjectionAgent",
-      "describeUrl": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=MapProjectionAgent"
+      "describeUrl": "https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=map_projection_agent"
     },
     {
       "agentName": "MappingAgent",
-      "describeUrl": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=MappingAgent"
+      "describeUrl": "https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=mapping_agent"
     },
     {
       "agentName": "PasdaDiscoveryAgent",
-      "describeUrl": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=PasdaDiscoveryAgent"
+      "describeUrl": "https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=pasda_agent"
     },
     {
       "agentName": "RasterAgent",
-      "describeUrl": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=RasterAgent"
+      "describeUrl": "https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=raster_agent"
     },
     {
       "agentName": "VectorAnalysisAgent",
-      "describeUrl": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=VectorAnalysisAgent"
+      "describeUrl": "https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=vector_analysis_agent"
     }
   ]
 }
