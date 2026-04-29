@@ -1,0 +1,45 @@
+{
+  "service": "GAS",
+  "version": "1.0.0",
+  "request": "GetCapabilities",
+  "title": "Geospatial Agentic Services from GIBD Lab at Penn State",
+  "description": "Demonstration API for GAS agents in a WMS-like style with JSON payloads.",
+  "provider": {
+	    "name": "Geoinformation and Big Data Research Lab (GIBD)",
+		"website": "https://giscience.psu.edu",
+		"contact": {
+			"name": "Zhenlong Li",
+			"email":"zhenlong@psu.edu"
+		}
+   }
+  "endpoints": {
+    "GetCapabilities": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=GetCapabilities",
+    "DescribeAgent": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent={agentName}"
+  },
+  "agents": [
+    {
+      "agentName": "DataRetrieverAgent",
+      "describeUrl": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=DataRetrieverAgent"
+    },
+    {
+      "agentName": "MapProjectionAgent",
+      "describeUrl": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=MapProjectionAgent"
+    },
+    {
+      "agentName": "MappingAgent",
+      "describeUrl": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=MappingAgent"
+    },
+    {
+      "agentName": "PasdaDiscoveryAgent",
+      "describeUrl": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=PasdaDiscoveryAgent"
+    },
+    {
+      "agentName": "RasterAgent",
+      "describeUrl": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=RasterAgent"
+    },
+    {
+      "agentName": "VectorAnalysisAgent",
+      "describeUrl": "http://128.118.54.16:4040/gas?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=VectorAnalysisAgent"
+    }
+  ]
+}
