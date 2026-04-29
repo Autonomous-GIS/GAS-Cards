@@ -184,6 +184,17 @@
     </style>
     <script>
         (function routeGasRequest() {
+            function renderJson(payload) {
+                document.title = "GAS API Response";
+                document.documentElement.innerHTML = "<head><meta charset=\"UTF-8\"></head><body><pre></pre></body>";
+                document.body.style.margin = "0";
+                document.body.style.padding = "16px";
+                document.body.style.fontFamily = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
+                document.body.style.backgroundColor = "#ffffff";
+                document.body.style.color = "#111111";
+                document.querySelector("pre").textContent = JSON.stringify(payload, null, 2);
+            }
+
             function renderErrorJson(errorMessage, details) {
                 var payload = {
                     ok: false,
@@ -194,14 +205,23 @@
                     payload.details = details;
                 }
 
-                document.title = "GAS API Error";
-                document.documentElement.innerHTML = "<head><meta charset=\"UTF-8\"></head><body><pre></pre></body>";
-                document.body.style.margin = "0";
-                document.body.style.padding = "16px";
-                document.body.style.fontFamily = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-                document.body.style.backgroundColor = "#ffffff";
-                document.body.style.color = "#111111";
-                document.querySelector("pre").textContent = JSON.stringify(payload, null, 2);
+                renderJson(payload);
+            }
+
+            function respondWithJsonFile(filePath) {
+                fetch(filePath, { cache: "no-store" })
+                    .then(function(response) {
+                        if (!response.ok) {
+                            throw new Error("HTTP " + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        renderJson(data);
+                    })
+                    .catch(function(err) {
+                        renderErrorJson("Requested JSON resource is unavailable.", String(err && err.message ? err.message : err));
+                    });
             }
 
             var params = new URLSearchParams(window.location.search);
@@ -220,12 +240,12 @@
             }
 
             if (request === "getcapabilities") {
-                window.location.replace("ServiceCapabilities/gas_capabilities.json");
+                respondWithJsonFile("ServiceCapabilities/gas_capabilities.json");
                 return;
             }
 
             if (request === "describeagent" && agent) {
-                window.location.replace("ServiceCapabilities/" + agent + ".json");
+                respondWithJsonFile("ServiceCapabilities/" + agent + ".json");
                 return;
             }
 
