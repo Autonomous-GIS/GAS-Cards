@@ -184,15 +184,177 @@
     </style>
     <script>
         (function routeGasRequest() {
+            var currentJsonFilename = "gas-response.json";
+
+            function escapeHtml(value) {
+                return String(value)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+            }
+
+            var jsonNodeCounter = 0;
+
+            function getIndent(depth) {
+                return new Array(depth + 1).join("  ");
+            }
+
+            function formatKey(key) {
+                return typeof key === "string" ? "<span class=\"json-key\">\"" + escapeHtml(key) + "\"</span>: " : "";
+            }
+
+            function formatPrimitive(value) {
+                if (value === null) {
+                    return "<span class=\"json-type-null\">null</span>";
+                }
+                if (typeof value === "string") {
+                    return "<span class=\"json-type-string\">\"" + escapeHtml(value) + "\"</span>";
+                }
+                if (typeof value === "number") {
+                    return "<span class=\"json-type-number\">" + String(value) + "</span>";
+                }
+                if (typeof value === "boolean") {
+                    return "<span class=\"json-type-boolean\">" + String(value) + "</span>";
+                }
+                return "<span class=\"json-type-undefined\">undefined</span>";
+            }
+
+            function renderJsonNode(value, key, depth, isLast, isRoot) {
+                var container = document.createElement("div");
+                var keyPrefix = formatKey(key);
+                var comma = isLast ? "" : ",";
+                var indent = getIndent(depth);
+
+                if (value === null || typeof value !== "object") {
+                    var primitiveLine = document.createElement("div");
+                    primitiveLine.className = "json-line";
+                    primitiveLine.innerHTML =
+                        escapeHtml(indent) +
+                        "<span class=\"json-toggle-slot\"></span>" +
+                        keyPrefix +
+                        formatPrimitive(value) +
+                        comma;
+                    container.appendChild(primitiveLine);
+                    return container;
+                }
+
+                var isArray = Array.isArray(value);
+                var keys = isArray ? value.map(function(_, i) { return i; }) : Object.keys(value);
+                var openChar = isArray ? "[" : "{";
+                var closeChar = isArray ? "]" : "}";
+
+                if (keys.length === 0) {
+                    var emptyLine = document.createElement("div");
+                    emptyLine.className = "json-line";
+                    emptyLine.innerHTML =
+                        escapeHtml(indent) +
+                        "<span class=\"json-toggle-slot\"></span>" +
+                        keyPrefix +
+                        openChar +
+                        closeChar +
+                        comma;
+                    container.appendChild(emptyLine);
+                    return container;
+                }
+
+                var nodeId = "json-node-" + (jsonNodeCounter++);
+                var headerLine = document.createElement("div");
+                headerLine.className = "json-line";
+                headerLine.innerHTML =
+                    escapeHtml(indent) +
+                    "<span class=\"json-toggle-slot\"><button type=\"button\" class=\"json-toggle\" data-target=\"" + nodeId + "\" aria-expanded=\"true\">▼</button></span>" +
+                    keyPrefix +
+                    openChar;
+                container.appendChild(headerLine);
+
+                var children = document.createElement("div");
+                children.id = nodeId;
+                children.className = "json-children";
+                keys.forEach(function(childKey, index) {
+                    children.appendChild(
+                        renderJsonNode(value[childKey], isArray ? null : String(childKey), depth + 1, index === keys.length - 1, false)
+                    );
+                });
+                container.appendChild(children);
+
+                var closingLine = document.createElement("div");
+                closingLine.className = "json-line";
+                closingLine.innerHTML = escapeHtml(indent) + "<span class=\"json-toggle-slot\"></span>" + closeChar + comma;
+                container.appendChild(closingLine);
+
+                if (isRoot) {
+                    container.classList.add("json-root");
+                }
+
+                return container;
+            }
+
             function renderJson(payload) {
                 document.title = "GAS API Response";
-                document.documentElement.innerHTML = "<head><meta charset=\"UTF-8\"></head><body><pre></pre></body>";
-                document.body.style.margin = "0";
-                document.body.style.padding = "16px";
-                document.body.style.fontFamily = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-                document.body.style.backgroundColor = "#ffffff";
-                document.body.style.color = "#111111";
-                document.querySelector("pre").textContent = JSON.stringify(payload, null, 2);
+                document.documentElement.innerHTML =
+                    "<head><meta charset=\"UTF-8\"><title>GAS API Response</title></head>" +
+                    "<body>" +
+                    "<div class=\"json-page\">" +
+                    "<div class=\"json-toolbar\">" +
+                    "<button id=\"download-json\" type=\"button\">Download JSON</button>" +
+                    "</div>" +
+                    "<div id=\"json-viewer\" class=\"json-viewer\"></div>" +
+                    "</div>" +
+                    "</body>";
+
+                var style = document.createElement("style");
+                style.textContent = [
+                    "body{margin:0;padding:16px;background:#ffffff;color:#111111;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}",
+                    ".json-page{max-width:1200px;margin:0 auto;}",
+                    ".json-toolbar{display:flex;justify-content:flex-end;margin-bottom:12px;}",
+                    "#download-json{border:1px solid #d2d2d7;background:#f5f5f7;color:#1d1d1f;border-radius:8px;padding:8px 12px;font-size:13px;cursor:pointer;}",
+                    "#download-json:hover{background:#ebebf0;}",
+                    ".json-viewer{border:1px solid #e5e5ea;border-radius:10px;padding:12px;line-height:1.5;}",
+                    ".json-line{padding:1px 0;white-space:pre;}",
+                    ".json-children{margin:0;}",
+                    ".json-toggle-slot{display:inline-block;width:14px;text-align:left;}",
+                    ".json-toggle{border:none;background:transparent;color:#007aff;cursor:pointer;padding:0;font-size:11px;line-height:1;vertical-align:middle;width:14px;text-align:left;}",
+                    ".json-key{color:#1d1d1f;}",
+                    ".json-meta{color:#007aff;}",
+                    ".json-type-string{color:#0a7f42;}",
+                    ".json-type-number{color:#b25000;}",
+                    ".json-type-boolean{color:#7b2cbf;}",
+                    ".json-type-null{color:#8e8e93;}",
+                    ".json-type-undefined{color:#8e8e93;}"
+                ].join("");
+                document.head.appendChild(style);
+
+                var viewer = document.getElementById("json-viewer");
+                viewer.appendChild(renderJsonNode(payload, null, 0, true, true));
+
+                viewer.addEventListener("click", function(event) {
+                    var toggle = event.target;
+                    if (!toggle.classList.contains("json-toggle")) {
+                        return;
+                    }
+                    var targetId = toggle.getAttribute("data-target");
+                    var target = document.getElementById(targetId);
+                    if (!target) {
+                        return;
+                    }
+                    var isHidden = target.style.display === "none";
+                    target.style.display = isHidden ? "block" : "none";
+                    toggle.textContent = isHidden ? "▼" : "▶";
+                    toggle.setAttribute("aria-expanded", isHidden ? "true" : "false");
+                });
+
+                document.getElementById("download-json").addEventListener("click", function() {
+                    var jsonText = JSON.stringify(payload, null, 2);
+                    var blob = new Blob([jsonText], { type: "application/json;charset=utf-8" });
+                    var url = URL.createObjectURL(blob);
+                    var link = document.createElement("a");
+                    link.href = url;
+                    link.download = currentJsonFilename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                });
             }
 
             function renderErrorJson(errorMessage, details) {
@@ -209,6 +371,8 @@
             }
 
             function respondWithJsonFile(filePath) {
+                var matchedName = String(filePath || "").match(/[^\\/]+$/);
+                currentJsonFilename = matchedName ? matchedName[0] : "gas-response.json";
                 fetch(filePath, { cache: "no-store" })
                     .then(function(response) {
                         if (!response.ok) {
