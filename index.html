@@ -425,8 +425,8 @@
 <body>
 
     <header>
-        <h1>Geospatial Agentic Services (GAS) Store</h1>
-        <h2>Registered Agents in the GAS Prototype</h2>
+        <h1>GAS Store</h1>
+        <h2>Geospatial Agents in the GAS Registry</h2>
     </header>
 
     <main class="container">
@@ -441,7 +441,7 @@
             </div>
             <div class="divider"></div>
             <p class="description">This agent performs vector-based spatial analysis and transformation. It supports operations such as clipping, joining, buffering, intersecting, distance analysis, filtering, and aggregation, returning either GeoJSON for spatial outputs or CSV for tabular outputs.</p>
-            <p class="citation">Get Agent Capabilities <br> <a href="https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=vector_analysis_agent">https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=vector_analysis_agent</a></p>
+            <p class="citation">Get Agent Capabilities <br> <a href="https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=vector_analysis_agent">https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=vector_analysis_agent</a></p>
         </article>
 
         <article class="card">
@@ -454,7 +454,7 @@
             </div>
             <div class="divider"></div>
             <p class="description">This agent performs raster-focused and mixed raster-vector spatial analysis. It supports tasks such as clipping, raster calculations, terrain-style operations, rasterization, and combined raster-vector workflows, returning outputs in formats such as GeoTIFF for raster products or GeoJSON for vector products.</p>
-            <p class="citation">Get Agent Capabilities <br> <a href="https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=raster_agent">https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&amp;VERSION=1.0.0&amp;REQUEST=DescribeAgent&amp;agent=raster_agent</a></p>
+            <p class="citation">Get Agent Capabilities <br> <a href="https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=raster_agent">https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=raster_agent</a></p>
         </article>
 
         <article class="card">
@@ -467,7 +467,7 @@
             </div>
             <div class="divider"></div>
             <p class="description">This agent specializes in discovering and downloading Pennsylvania geospatial data from PASDA services (https://www.pasda.psu.edu/). It can inspect available services, review candidate layers, sample their attributes, and retrieve the selected layer as GeoJSON. </p>
-            <p class="citation">Get Agent Capabilities <br> <a href="https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=pasda_agent">https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&amp;VERSION=1.0.0&amp;REQUEST=DescribeAgent&amp;agent=pasda_agent</a></p>
+            <p class="citation">Get Agent Capabilities <br> <a href="https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=pasda_agent">https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=pasda_agent</a></p>
         </article>
 
         <article class="card">
@@ -480,7 +480,7 @@
             </div>
             <div class="divider"></div>
             <p class="description">This agent creates visual outputs from prepared datasets, including maps and charts, returning result as a PNG image or an HTML file for interactive maps. It chooses an appropriate visualization style based on the task and available data structure. It is most useful at the final presentation stage of a workflow when analysis results need to be communicated clearly.</p>
-            <p class="citation">Get Agent Capabilities <br> <a href="https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=mapping_agent">https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&amp;VERSION=1.0.0&amp;REQUEST=DescribeAgent&amp;agent=mapping_agent</a></p>
+            <p class="citation">Get Agent Capabilities <br> <a href="https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=mapping_agent">https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=mapping_agent</a></p>
         </article>
 
         <article class="card">
@@ -493,7 +493,7 @@
             </div>
             <div class="divider"></div>
             <p class="description">This agent determines an appropriate coordinate reference system for a spatial task based on the user request and the dataset context. It evaluates candidate CRS options and applies the selected transformation. It is intended for reprojection tasks where CRS choice affects spatial accuracy and analysis quality.</p>
-            <p class="citation">Get Agent Capabilities <br> <a href="https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=map_projection_agent">https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&amp;VERSION=1.0.0&amp;REQUEST=DescribeAgent&amp;agent=map_projection_agent</a></p>
+            <p class="citation">Get Agent Capabilities <br> <a href="https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=map_projection_agent">https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=map_projection_agent</a></p>
         </article>
 
         <article class="card">
@@ -506,13 +506,13 @@
             </div>
             <div class="divider"></div>
             <p class="description">This agent interprets a user data request, matches it to the most suitable supported source, and uses the handbook guidance for that source. It generates and executes download logic, returning the requested geospatial dataset. It is best suited for general-purpose data acquisition from supported external sources.</p>
-            <p class="citation">Get Agent Capabilities <br> <a href="https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&agent=data_retriever_agent">https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&amp;VERSION=1.0.0&amp;REQUEST=DescribeAgent&amp;agent=data_retriever_agent</a></p>
+            <p class="citation">Get Agent Capabilities <br> <a href="https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=data_retriever_agent">https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=data_retriever_agent</a></p>
         </article>
 
     </main>
  <p style="text-align: center; padding: 0 20px 40px; word-break: break-all;">
-        <a href="https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=GetCapabilities">
-            https://autonomous-gis.github.io/GAS-Store?SERVICE=GAS&VERSION=1.0.0&REQUEST=GetCapabilities
+        <a href="https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=GetCapabilities">
+            https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=GetCapabilities
         </a>
     </p>
 </body>
