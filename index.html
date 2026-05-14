@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAS Store</title>
+    <title>GAS Store (Registry + Search)</title>
     <style>
         :root {
             --bg-color: #f5f5f7;
@@ -237,6 +237,90 @@
         .modal-skill-desc { font-size: 14px; color: #515154; margin: 0; line-height: 1.45; }
         .modal-link { display: inline-block; margin-top: 4px; color: var(--accent-color); font-weight: 600; font-size: 13px; text-decoration: none; }
         .modal-link:hover { text-decoration: underline; }
+
+        /* Action bar (search + register) */
+        .action-bar {
+            max-width: 1200px;
+            margin: 0 auto 24px;
+            padding: 0 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        .search-input {
+            flex: 1 1 240px;
+            max-width: 420px;
+            padding: 10px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 14px;
+            font-size: 15px;
+            background: #fff;
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .search-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0,122,255,0.15);
+        }
+        .primary-btn {
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            padding: 10px 18px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.15s ease, transform 0.05s ease;
+        }
+        .primary-btn:hover { background: #0064d6; }
+        .primary-btn:active { transform: translateY(1px); }
+        .primary-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+        /* Registration modal form */
+        .form-row { margin: 0 0 14px; }
+        .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin: 0 0 6px; }
+        .form-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 14px;
+            border: 1px solid #d2d2d7;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+        }
+        .form-input:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(0,122,255,0.15); }
+        .form-hint { font-size: 12px; color: var(--text-secondary); margin: 4px 0 0; }
+        .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+        .secondary-btn {
+            background: var(--btn-bg); color: var(--text-primary);
+            border: none; border-radius: 12px;
+            padding: 10px 18px; font-size: 15px; font-weight: 600;
+            cursor: pointer;
+        }
+        .secondary-btn:hover { background: var(--btn-hover); }
+        .form-status {
+            margin-top: 12px;
+            font-size: 14px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            display: none;
+        }
+        .form-status.info    { display: block; background: #eaf3ff; color: #0c5fc7; }
+        .form-status.success { display: block; background: #e6f6ec; color: #1f7a3f; }
+        .form-status.error   { display: block; background: #fdecec; color: #b3261e; }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 40px 20px;
+            font-size: 15px;
+        }
     </style>
     <script>
         (function routeGasRequest() {
@@ -485,6 +569,11 @@
         <h2>Published Geospatial Agentic Services in the GAS Registry</h2>
     </header>
 
+    <div class="action-bar">
+        <input id="search-input" class="search-input" type="search" placeholder="Search agents by name, description, or tag…" autocomplete="off">
+        <button id="register-btn" class="primary-btn" type="button">Register GAS Server</button>
+    </div>
+
     <main class="container" id="agent-cards">
         <p id="agent-cards-status" style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary);">Loading agents…</p>
     </main>
@@ -684,31 +773,186 @@
             var container = document.getElementById("agent-cards");
             var statusEl = document.getElementById("agent-cards-status");
 
-            fetchJson(CAPABILITIES_URL)
-                .then(function(caps) {
-                    var agents = (caps && caps.agents) || [];
-                    if (!agents.length) {
-                        statusEl.textContent = "No agents are currently published.";
-                        return;
-                    }
+            function setStatus(msg) {
+                if (!statusEl.isConnected) {
+                    container.insertBefore(statusEl, container.firstChild);
+                }
+                statusEl.textContent = msg;
+            }
+            function clearStatus() {
+                if (statusEl.isConnected) statusEl.remove();
+            }
 
-                    // Fetch all agent details in parallel; preserve order from GetCapabilities.
-                    return Promise.all(agents.map(function(a) {
-                        return fetchJson(a.describeUrl)
-                            .then(function(detail) { return { entry: a, detail: detail, err: null }; })
-                            .catch(function(err) { return { entry: a, detail: null, err: err }; });
-                    })).then(function(results) {
-                        statusEl.remove();
-                        results.forEach(function(r) {
-                            container.appendChild(
-                                r.err ? renderErrorCard(r.entry, r.err) : renderCard(r.entry, r.detail)
-                            );
-                        });
+            // Build a lowercased haystack of searchable fields for one card.
+            function buildSearchText(entry, detail) {
+                var parts = [];
+                var slug = (detail && detail.profile && detail.profile.name) || (entry && entry.name) || "";
+                if (slug) {
+                    parts.push(slug);                                    // vector_analysis_agent
+                    parts.push(slug.replace(/_/g, " "));                 // vector analysis agent
+                    parts.push(toDisplayTitle(slug));                    // VectorAnalysisAgent (matches what's shown)
+                }
+                if (detail && detail.profile) {
+                    parts.push(detail.profile.description || "");
+                    parts.push(detail.profile.agent_type || "");
+                }
+                if (detail && detail.skills) {
+                    detail.skills.forEach(function(s) {
+                        parts.push(s.name || "");
+                        parts.push(s.description || "");
+                        (s.tags || []).forEach(function(t) { parts.push(t); });
+                        (s.supported_operations || []).forEach(function(op) { parts.push(op); });
                     });
-                })
-                .catch(function(err) {
-                    statusEl.textContent = "Failed to load agent registry: " + (err && err.message ? err.message : String(err));
+                }
+                return parts.join(" ").toLowerCase();
+            }
+
+            // Track slugs already in the grid to avoid duplicates across registrations.
+            var renderedSlugs = Object.create(null);
+
+            function appendAgentsFromCapabilities(caps) {
+                var agents = (caps && caps.agents) || [];
+                var fresh = agents.filter(function(a) {
+                    var slug = a && a.name;
+                    if (!slug || renderedSlugs[slug]) return false;
+                    return true;
                 });
+                if (!fresh.length) {
+                    return Promise.resolve({ added: 0, total: agents.length, duplicates: agents.length });
+                }
+                return Promise.all(fresh.map(function(a) {
+                    return fetchJson(a.describeUrl)
+                        .then(function(detail) { return { entry: a, detail: detail, err: null }; })
+                        .catch(function(err) { return { entry: a, detail: null, err: err }; });
+                })).then(function(results) {
+                    clearStatus();
+                    results.forEach(function(r) {
+                        var card = r.err ? renderErrorCard(r.entry, r.err) : renderCard(r.entry, r.detail);
+                        card.setAttribute("data-search", buildSearchText(r.entry, r.detail));
+                        container.appendChild(card);
+                        if (r.entry && r.entry.name) renderedSlugs[r.entry.name] = true;
+                    });
+                    applySearchFilter();
+                    return { added: results.length, total: agents.length, duplicates: agents.length - fresh.length };
+                });
+            }
+
+            function registerServer(url) {
+                return fetchJson(url).then(appendAgentsFromCapabilities);
+            }
+
+            // ---- Initial load from the default GAS server ----
+            registerServer(CAPABILITIES_URL).catch(function(err) {
+                setStatus("Failed to load agent registry: " + (err && err.message ? err.message : String(err)));
+            });
+
+            // ---- Search filter ----
+            var searchInput = document.getElementById("search-input");
+            var emptyStateEl = null;
+            function applySearchFilter() {
+                var q = (searchInput.value || "").trim().toLowerCase();
+                var cards = container.querySelectorAll(".card");
+                var visible = 0;
+                cards.forEach(function(card) {
+                    var hay = card.getAttribute("data-search") || "";
+                    var match = !q || hay.indexOf(q) !== -1;
+                    card.style.display = match ? "" : "none";
+                    if (match) visible++;
+                });
+                if (q && visible === 0 && cards.length > 0) {
+                    if (!emptyStateEl) {
+                        emptyStateEl = document.createElement("p");
+                        emptyStateEl.className = "empty-state";
+                        container.appendChild(emptyStateEl);
+                    }
+                    emptyStateEl.textContent = "No agents match “" + searchInput.value + "”.";
+                } else if (emptyStateEl) {
+                    emptyStateEl.remove();
+                    emptyStateEl = null;
+                }
+            }
+            searchInput.addEventListener("input", applySearchFilter);
+
+            // ---- Register modal ----
+            var registerBtn = document.getElementById("register-btn");
+            registerBtn.addEventListener("click", openRegisterModal);
+
+            function openRegisterModal() {
+                var defaultUrl = "https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=GetCapabilities";
+                modalContent.innerHTML =
+                    '<button class="modal-close" type="button" aria-label="Close">×</button>' +
+                    '<h2 class="modal-title">Register GAS Server</h2>' +
+                    '<p class="modal-meta">Enter the GetCapabilities URL of a GAS server. We’ll fetch every agent it publishes and add them to the catalog below.</p>' +
+                    '<form id="register-form" novalidate>' +
+                        '<div class="form-row">' +
+                            '<label class="form-label" for="register-url-input">GetCapabilities URL</label>' +
+                            '<input id="register-url-input" class="form-input" type="url" required ' +
+                                'placeholder="https://example.com/?SERVICE=GAS&VERSION=1.0.0&REQUEST=GetCapabilities" ' +
+                                'value="' + escapeHtml(defaultUrl) + '">' +
+                            <!-- '<p class="form-hint">The server must allow cross-origin requests (CORS) or be on the same origin as this page.</p>' + -->
+                        '</div>' +
+                        '<div id="register-status" class="form-status"></div>' +
+                        '<div class="form-actions">' +
+                            '<button type="button" id="register-cancel" class="secondary-btn">Cancel</button>' +
+                            '<button type="submit" id="register-submit" class="primary-btn">Register</button>' +
+                        '</div>' +
+                    '</form>';
+
+                modalContent.querySelector(".modal-close").addEventListener("click", closeModal);
+                modalContent.querySelector("#register-cancel").addEventListener("click", closeModal);
+                modalContent.querySelector("#register-form").addEventListener("submit", handleRegisterSubmit);
+                modalContent.scrollTop = 0;
+                modalOverlay.classList.add("open");
+                document.body.style.overflow = "hidden";
+                setTimeout(function() {
+                    var input = document.getElementById("register-url-input");
+                    if (input) { input.focus(); input.select(); }
+                }, 50);
+            }
+
+            function handleRegisterSubmit(e) {
+                e.preventDefault();
+                var input = document.getElementById("register-url-input");
+                var statusBox = document.getElementById("register-status");
+                var submitBtn = document.getElementById("register-submit");
+                var url = (input.value || "").trim();
+                if (!url) {
+                    statusBox.className = "form-status error";
+                    statusBox.textContent = "Please enter a URL.";
+                    return;
+                }
+
+                statusBox.className = "form-status info";
+                statusBox.textContent = "Fetching capabilities…";
+                submitBtn.disabled = true;
+                input.disabled = true;
+
+                registerServer(url)
+                    .then(function(result) {
+                        var added = (result && result.added) || 0;
+                        var dup = (result && result.duplicates) || 0;
+                        statusBox.className = "form-status success";
+                        if (added > 0) {
+                            statusBox.textContent = "Registered. Added " + added + " agent" + (added === 1 ? "" : "s") +
+                                (dup > 0 ? " (" + dup + " already in catalog)" : "") + ".";
+                        } else if (dup > 0) {
+                            statusBox.textContent = "All " + dup + " agent" + (dup === 1 ? "" : "s") + " from that server are already in the catalog.";
+                        } else {
+                            statusBox.textContent = "No agents found at that URL.";
+                        }
+                        setTimeout(closeModal, 900);
+                    })
+                    .catch(function(err) {
+                        statusBox.className = "form-status error";
+                        var msg = err && err.message ? err.message : String(err);
+                        if (/failed to fetch/i.test(msg) || /network/i.test(msg)) {
+                            msg += " — likely a CORS issue. The server must send Access-Control-Allow-Origin, or you must open this page from the same origin as the server.";
+                        }
+                        statusBox.textContent = msg;
+                        submitBtn.disabled = false;
+                        input.disabled = false;
+                    });
+            }
         })();
     </script>
  <p style="text-align: center; padding: 0 20px 40px; word-break: break-all;">
