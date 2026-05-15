@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAS Store (Registry + Search)</title>
+    <title>GAS Store</title>
     <style>
         :root {
             --bg-color: #f5f5f7;
@@ -61,8 +61,6 @@
             flex-direction: column;
             gap: 16px;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            height: 360px;
-            min-height: 0;
         }
 
         .card:hover {
@@ -134,19 +132,8 @@
             line-height: 1.45;
             color: #515154;
             margin: 0;
-            flex: 1 1 auto;
-            min-height: 0;
-            overflow-y: auto;
-            overflow-x: hidden;
-            overflow-wrap: anywhere;
-            word-break: break-word;
-            padding-right: 6px;
-            scrollbar-width: thin;
-            scrollbar-color: #c7c7cc transparent;
+            flex-grow: 1;
         }
-        .description::-webkit-scrollbar { width: 6px; }
-        .description::-webkit-scrollbar-thumb { background: #c7c7cc; border-radius: 3px; }
-        .description::-webkit-scrollbar-track { background: transparent; }
 
         .divider {
             height: 1px;
@@ -194,133 +181,6 @@
             background-color: var(--btn-hover);
         }
 
-        .title.clickable { cursor: pointer; transition: color 0.2s ease; }
-        .title.clickable:hover { color: var(--accent-color); }
-
-        .modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.45);
-            display: none;
-            align-items: center; justify-content: center;
-            padding: 20px;
-            z-index: 1000;
-        }
-        .modal-overlay.open { display: flex; }
-        .modal-content {
-            background: #fff;
-            border-radius: 20px;
-            max-width: 720px; width: 100%;
-            max-height: 85vh; overflow-y: auto;
-            padding: 32px 36px;
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-            -webkit-overflow-scrolling: touch;
-        }
-        .modal-close {
-            position: absolute; top: 14px; right: 14px;
-            background: var(--btn-bg); border: none;
-            width: 36px; height: 36px; border-radius: 50%;
-            font-size: 18px; line-height: 1; cursor: pointer;
-            color: var(--text-primary);
-        }
-        .modal-close:hover { background: var(--btn-hover); }
-        .modal-title { font-size: 26px; font-weight: 700; margin: 0 0 6px; letter-spacing: -0.01em; }
-        .modal-meta { font-size: 13px; color: var(--text-secondary); margin: 0 0 20px; }
-        .modal-description { font-size: 16px; line-height: 1.55; color: #333; margin: 0; overflow-wrap: anywhere; word-break: break-word; }
-        .modal-section { margin-top: 24px; }
-        .modal-section h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-secondary); margin: 0 0 10px; font-weight: 600; }
-        .modal-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-        .modal-tag { background: var(--btn-bg); color: #1d1d1f; border-radius: 8px; padding: 4px 10px; font-size: 13px; font-weight: 500; }
-        .modal-skill { padding: 12px 0; border-top: 1px solid #e5e5ea; }
-        .modal-skill:first-child { border-top: none; padding-top: 0; }
-        .modal-skill-name { font-weight: 600; margin: 0 0 4px; font-size: 15px; }
-        .modal-skill-desc { font-size: 14px; color: #515154; margin: 0; line-height: 1.45; }
-        .modal-link { display: inline-block; margin-top: 4px; color: var(--accent-color); font-weight: 600; font-size: 13px; text-decoration: none; }
-        .modal-link:hover { text-decoration: underline; }
-
-        /* Action bar (search + register) */
-        .action-bar {
-            max-width: 1200px;
-            margin: 0 auto 24px;
-            padding: 0 20px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            justify-content: flex-end;
-            flex-wrap: wrap;
-        }
-        .search-input {
-            flex: 1 1 240px;
-            max-width: 420px;
-            padding: 10px 16px;
-            border: 1px solid #d2d2d7;
-            border-radius: 14px;
-            font-size: 15px;
-            background: #fff;
-            color: var(--text-primary);
-            outline: none;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
-        }
-        .search-input:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(0,122,255,0.15);
-        }
-        .primary-btn {
-            background: var(--accent-color);
-            color: #fff;
-            border: none;
-            border-radius: 14px;
-            padding: 10px 18px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.15s ease, transform 0.05s ease;
-        }
-        .primary-btn:hover { background: #0064d6; }
-        .primary-btn:active { transform: translateY(1px); }
-        .primary-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-
-        /* Registration modal form */
-        .form-row { margin: 0 0 14px; }
-        .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin: 0 0 6px; }
-        .form-input {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 10px 14px;
-            border: 1px solid #d2d2d7;
-            border-radius: 12px;
-            font-size: 14px;
-            font-family: inherit;
-            outline: none;
-        }
-        .form-input:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(0,122,255,0.15); }
-        .form-hint { font-size: 12px; color: var(--text-secondary); margin: 4px 0 0; }
-        .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
-        .secondary-btn {
-            background: var(--btn-bg); color: var(--text-primary);
-            border: none; border-radius: 12px;
-            padding: 10px 18px; font-size: 15px; font-weight: 600;
-            cursor: pointer;
-        }
-        .secondary-btn:hover { background: var(--btn-hover); }
-        .form-status {
-            margin-top: 12px;
-            font-size: 14px;
-            padding: 10px 14px;
-            border-radius: 10px;
-            display: none;
-        }
-        .form-status.info    { display: block; background: #eaf3ff; color: #0c5fc7; }
-        .form-status.success { display: block; background: #e6f6ec; color: #1f7a3f; }
-        .form-status.error   { display: block; background: #fdecec; color: #b3261e; }
-
-        .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            color: var(--text-secondary);
-            padding: 40px 20px;
-            font-size: 15px;
-        }
     </style>
     <script>
         (function routeGasRequest() {
@@ -530,7 +390,7 @@
 
             var params = new URLSearchParams(window.location.search);
             var request = (params.get("REQUEST") || "").toLowerCase();
-            var agent = (params.get("name") || params.get("agent") || "").toLowerCase();
+            var agent = (params.get("agent") || "").toLowerCase();
             var service = (params.get("SERVICE") || "").toUpperCase();
 
             // Keep normal page rendering when URL is not API-style.
@@ -569,392 +429,87 @@
         <h2>Published Geospatial Agentic Services in the GAS Registry</h2>
     </header>
 
-    <div class="action-bar">
-        <input id="search-input" class="search-input" type="search" placeholder="Search agents by name, description, or tag…" autocomplete="off">
-        <button id="register-btn" class="primary-btn" type="button">Register GAS Server</button>
-    </div>
+    <main class="container">
 
-    <main class="container" id="agent-cards">
-        <p id="agent-cards-status" style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary);">Loading agents…</p>
+        <article class="card">
+            <div class="card-header">
+                <div class="icon icon-vector">📐</div>
+                <div class="title-group">
+                    <h3 class="title">VectorAnalysisAgent</h3>
+                    <p class="version">Version 1.3.0</p>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <p class="description">This agent performs vector-based spatial analysis and transformation. It supports operations such as clipping, joining, buffering, intersecting, distance analysis, filtering, and aggregation, returning either GeoJSON for spatial outputs or CSV for tabular outputs.</p>
+            <p class="citation">Get Agent Capabilities <br> <a href="https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=vector_analysis_agent">https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=vector_analysis_agent</a></p>
+        </article>
+
+        <article class="card">
+            <div class="card-header">
+                <div class="icon icon-raster">🏔️</div>
+                <div class="title-group">
+                    <h3 class="title">RasterAgent</h3>
+                    <p class="version">Version 1.2.0</p>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <p class="description">This agent performs raster-focused and mixed raster-vector spatial analysis. It supports tasks such as clipping, raster calculations, terrain-style operations, rasterization, and combined raster-vector workflows, returning outputs in formats such as GeoTIFF for raster products or GeoJSON for vector products.</p>
+            <p class="citation">Get Agent Capabilities <br> <a href="https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=raster_agent">https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=raster_agent</a></p>
+        </article>
+
+        <article class="card">
+            <div class="card-header">
+                <div class="icon icon-pasda">🔍</div>
+                <div class="title-group">
+                    <h3 class="title">PasdaAgent</h3>
+                    <p class="version">Version 1.0.0</p>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <p class="description">This agent specializes in discovering and downloading Pennsylvania geospatial data from PASDA services (https://www.pasda.psu.edu/). It can inspect available services, review candidate layers, sample their attributes, and retrieve the selected layer as GeoJSON. </p>
+            <p class="citation">Get Agent Capabilities <br> <a href="https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=pasda_agent">https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=pasda_agent</a></p>
+        </article>
+
+        <article class="card">
+            <div class="card-header">
+                <div class="icon icon-mapping">📍</div>
+                <div class="title-group">
+                    <h3 class="title">MappingAgent</h3>
+                    <p class="version">Version 1.0.0</p>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <p class="description">This agent creates visual outputs from prepared datasets, including maps and charts, returning result as a PNG image or an HTML file for interactive maps. It chooses an appropriate visualization style based on the task and available data structure. It is most useful at the final presentation stage of a workflow when analysis results need to be communicated clearly.</p>
+            <p class="citation">Get Agent Capabilities <br> <a href="https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=mapping_agent">https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=mapping_agent</a></p>
+        </article>
+
+        <article class="card">
+            <div class="card-header">
+                <div class="icon icon-projection">🌐</div>
+                <div class="title-group">
+                    <h3 class="title">MapProjectionAgent</h3>
+                    <p class="version">Version 1.0.0</p>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <p class="description">This agent determines an appropriate coordinate reference system for a spatial task based on the user request and the dataset context. It evaluates candidate CRS options and applies the selected transformation. It is intended for reprojection tasks where CRS choice affects spatial accuracy and analysis quality.</p>
+            <p class="citation">Get Agent Capabilities <br> <a href="https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=map_projection_agent">https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=map_projection_agent</a></p>
+        </article>
+
+        <article class="card">
+            <div class="card-header">
+                <div class="icon icon-retriever">📥</div>
+                <div class="title-group">
+                    <h3 class="title">DataRetrieverAgent</h3>
+                    <p class="version">Version 1.0.0</p>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <p class="description">This agent interprets a user data request, matches it to the most suitable supported source, and uses the handbook guidance for that source. It generates and executes download logic, returning the requested geospatial dataset. It is best suited for general-purpose data acquisition from supported external sources.</p>
+            <p class="citation">Get Agent Capabilities <br> <a href="https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=data_retriever_agent">https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=DescribeAgent&name=data_retriever_agent</a></p>
+        </article>
+
     </main>
-
-    <script>
-        (function loadAgentCards() {
-            // Skip if the page is rendering an API JSON response.
-            var params = new URLSearchParams(window.location.search);
-            if (params.get("REQUEST")) {
-                return;
-            }
-
-            var CAPABILITIES_URL = "https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=GetCapabilities";
-
-            // Presentation-only mapping for icon styles + emoji, keyed by agent slug.
-            // New agents fall back to a default style.
-            var ICON_MAP = {
-                vector_analysis_agent: { cls: "icon-vector",     emoji: "📐" }, // 📐
-                raster_agent:          { cls: "icon-raster",     emoji: "🏔️" }, // 🏔️
-                pasda_agent:           { cls: "icon-pasda",      emoji: "🔍" }, // 🔍
-                mapping_agent:         { cls: "icon-mapping",    emoji: "📍" }, // 📍
-                map_projection_agent:  { cls: "icon-projection", emoji: "🌐" }, // 🌐
-                data_retriever_agent:  { cls: "icon-retriever",  emoji: "📥" }  // 📥
-            };
-            var DEFAULT_ICON = { cls: "icon-vector", emoji: "✨" };
-
-            function escapeHtml(value) {
-                return String(value == null ? "" : value)
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;");
-            }
-
-            //  Convert e.g "vector_analysis_agent" -> "VectorAnalysisAgent"
-            function toDisplayTitle(slug) {
-                return String(slug || "")
-                    .split("_")
-                    .filter(Boolean)
-                    .map(function(p) { return p.charAt(0).toUpperCase() + p.slice(1); })
-                    .join("");
-            }
-
-            function fetchJson(url) {
-                return fetch(url, { cache: "no-store" }).then(function(r) {
-                    if (!r.ok) { throw new Error("HTTP " + r.status + " for " + url); }
-                    return r.json();
-                });
-            }
-
-            // ---- Modal (one shared instance) ----
-            var modalOverlay = document.createElement("div");
-            modalOverlay.className = "modal-overlay";
-            var modalContent = document.createElement("div");
-            modalContent.className = "modal-content";
-            modalOverlay.appendChild(modalContent);
-            document.body.appendChild(modalOverlay);
-
-            function closeModal() {
-                modalOverlay.classList.remove("open");
-                document.body.style.overflow = "";
-            }
-            modalOverlay.addEventListener("click", function(e) {
-                if (e.target === modalOverlay) closeModal();
-            });
-            document.addEventListener("keydown", function(e) {
-                if (e.key === "Escape") closeModal();
-            });
-
-            function tagsHtml(values) {
-                return values.map(function(t) {
-                    return '<span class="modal-tag">' + escapeHtml(t) + '</span>';
-                }).join("");
-            }
-
-            function openModal(agentEntry, detail) {
-                var profile = (detail && detail.profile) || {};
-                var slug = profile.name || agentEntry.name || "";
-                var title = toDisplayTitle(slug);
-                var version = profile.version || "";
-                var status = profile.status || "";
-                var lastUpdated = profile.last_updated || "";
-                var description = profile.description || "";
-                var provider = profile.provider || {};
-                var contact = provider.contact || {};
-
-                var dataSupport = (detail && detail.data_support) || {};
-                var formats = dataSupport.supported_formats || [];
-                var dataTypes = dataSupport.supported_data_types || [];
-                var combinedFormats = formats.concat(dataTypes.filter(function(t){ return formats.indexOf(t) === -1; }));
-
-                var skills = (detail && detail.skills) || [];
-
-                var metaParts = [];
-                if (version) metaParts.push("Version " + escapeHtml(version));
-                if (status) metaParts.push(escapeHtml(status));
-                if (lastUpdated) metaParts.push("Updated " + escapeHtml(lastUpdated));
-
-                var html =
-                    '<button class="modal-close" type="button" aria-label="Close">×</button>' +
-                    '<h2 class="modal-title">' + escapeHtml(title) + '</h2>' +
-                    (metaParts.length ? '<p class="modal-meta">' + metaParts.join(" · ") + '</p>' : '') +
-                    '<p class="modal-description">' + escapeHtml(description) + '</p>';
-
-                if (combinedFormats.length) {
-                    html += '<div class="modal-section"><h4>Supported formats</h4>' +
-                        '<div class="modal-tags">' + tagsHtml(combinedFormats) + '</div></div>';
-                }
-
-                if (skills.length) {
-                    html += '<div class="modal-section"><h4>Skills</h4>';
-                    skills.forEach(function(s) {
-                        html += '<div class="modal-skill">' +
-                            '<p class="modal-skill-name">' + escapeHtml(s.name || s.id || "") + '</p>' +
-                            '<p class="modal-skill-desc">' + escapeHtml(s.description || "") + '</p>' +
-                            '</div>';
-                    });
-                    html += '</div>';
-                }
-
-                if (provider.name || contact.email) {
-                    html += '<div class="modal-section"><h4>Provider</h4>' +
-                        '<p class="modal-skill-desc">' + escapeHtml(provider.name || "") +
-                        (contact.name ? ' — ' + escapeHtml(contact.name) : '') +
-                        (contact.email ? ' (<a class="modal-link" href="mailto:' + escapeHtml(contact.email) + '">' + escapeHtml(contact.email) + '</a>)' : '') +
-                        '</p></div>';
-                }
-
-                if (agentEntry.describeUrl) {
-                    html += '<div class="modal-section">' +
-                        '<a class="modal-link" href="' + escapeHtml(agentEntry.describeUrl) + '" target="_blank" rel="noopener">View full DescribeAgent JSON →</a>' +
-                        '</div>';
-                }
-
-                modalContent.innerHTML = html;
-                modalContent.querySelector(".modal-close").addEventListener("click", closeModal);
-                modalContent.scrollTop = 0;
-                modalOverlay.classList.add("open");
-                document.body.style.overflow = "hidden";
-            }
-            // ---- /Modal ----
-
-            function renderCard(agentEntry, detail) {
-                var slug = (detail && detail.profile && detail.profile.name) || agentEntry.name || "";
-                var icon = ICON_MAP[slug] || DEFAULT_ICON;
-                var title = toDisplayTitle(slug);
-                var version = (detail && detail.profile && detail.profile.version) || "";
-                var description = (detail && detail.profile && detail.profile.description) || "";
-                var describeUrl = agentEntry.describeUrl || "";
-                var hasDetail = !!(detail && detail.profile);
-
-                var article = document.createElement("article");
-                article.className = "card";
-                article.innerHTML =
-                    '<div class="card-header">' +
-                        '<div class="icon ' + escapeHtml(icon.cls) + '">' + icon.emoji + '</div>' +
-                        '<div class="title-group">' +
-                            '<h3 class="title' + (hasDetail ? ' clickable' : '') + '" title="' + (hasDetail ? 'Click for full details' : '') + '">' + escapeHtml(title) + '</h3>' +
-                            (version ? '<p class="version">Version ' + escapeHtml(version) + '</p>' : '') +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="divider"></div>' +
-                    '<p class="description">' + escapeHtml(description) + '</p>' +
-                    (describeUrl
-                        ? '<p class="citation">' +
-                            '<a href="' + escapeHtml(describeUrl) + '" target="_blank" rel="noopener">Get Agent Capabilities</a>' +
-                          '</p>'
-                        : '');
-
-                if (hasDetail) {
-                    var titleEl = article.querySelector(".title");
-                    titleEl.addEventListener("click", function() { openModal(agentEntry, detail); });
-                }
-                return article;
-            }
-
-            function renderErrorCard(agentEntry, err) {
-                var slug = agentEntry.name || "";
-                var article = document.createElement("article");
-                article.className = "card";
-                article.innerHTML =
-                    '<div class="card-header">' +
-                        '<div class="icon ' + escapeHtml((ICON_MAP[slug] || DEFAULT_ICON).cls) + '">!</div>' +
-                        '<div class="title-group">' +
-                            '<h3 class="title">' + escapeHtml(toDisplayTitle(slug)) + '</h3>' +
-                            '<p class="version">Unavailable</p>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="divider"></div>' +
-                    '<p class="description">Could not load agent details: ' + escapeHtml(err && err.message ? err.message : String(err)) + '</p>' +
-                    (agentEntry.describeUrl
-                        ? '<p class="citation"><a href="' + escapeHtml(agentEntry.describeUrl) + '" target="_blank" rel="noopener">Get Agent Capabilities</a></p>'
-                        : '');
-                return article;
-            }
-
-            var container = document.getElementById("agent-cards");
-            var statusEl = document.getElementById("agent-cards-status");
-
-            function setStatus(msg) {
-                if (!statusEl.isConnected) {
-                    container.insertBefore(statusEl, container.firstChild);
-                }
-                statusEl.textContent = msg;
-            }
-            function clearStatus() {
-                if (statusEl.isConnected) statusEl.remove();
-            }
-
-            // Build a lowercased haystack of searchable fields for one card.
-            function buildSearchText(entry, detail) {
-                var parts = [];
-                var slug = (detail && detail.profile && detail.profile.name) || (entry && entry.name) || "";
-                if (slug) {
-                    parts.push(slug);                                    // vector_analysis_agent
-                    parts.push(slug.replace(/_/g, " "));                 // vector analysis agent
-                    parts.push(toDisplayTitle(slug));                    // VectorAnalysisAgent (matches what's shown)
-                }
-                if (detail && detail.profile) {
-                    parts.push(detail.profile.description || "");
-                    parts.push(detail.profile.agent_type || "");
-                }
-                if (detail && detail.skills) {
-                    detail.skills.forEach(function(s) {
-                        parts.push(s.name || "");
-                        parts.push(s.description || "");
-                        (s.tags || []).forEach(function(t) { parts.push(t); });
-                        (s.supported_operations || []).forEach(function(op) { parts.push(op); });
-                    });
-                }
-                return parts.join(" ").toLowerCase();
-            }
-
-            // Track slugs already in the grid to avoid duplicates across registrations.
-            var renderedSlugs = Object.create(null);
-
-            function appendAgentsFromCapabilities(caps) {
-                var agents = (caps && caps.agents) || [];
-                var fresh = agents.filter(function(a) {
-                    var slug = a && a.name;
-                    if (!slug || renderedSlugs[slug]) return false;
-                    return true;
-                });
-                if (!fresh.length) {
-                    return Promise.resolve({ added: 0, total: agents.length, duplicates: agents.length });
-                }
-                return Promise.all(fresh.map(function(a) {
-                    return fetchJson(a.describeUrl)
-                        .then(function(detail) { return { entry: a, detail: detail, err: null }; })
-                        .catch(function(err) { return { entry: a, detail: null, err: err }; });
-                })).then(function(results) {
-                    clearStatus();
-                    results.forEach(function(r) {
-                        var card = r.err ? renderErrorCard(r.entry, r.err) : renderCard(r.entry, r.detail);
-                        card.setAttribute("data-search", buildSearchText(r.entry, r.detail));
-                        container.appendChild(card);
-                        if (r.entry && r.entry.name) renderedSlugs[r.entry.name] = true;
-                    });
-                    applySearchFilter();
-                    return { added: results.length, total: agents.length, duplicates: agents.length - fresh.length };
-                });
-            }
-
-            function registerServer(url) {
-                return fetchJson(url).then(appendAgentsFromCapabilities);
-            }
-
-            // ---- Initial load from the default GAS server ----
-            registerServer(CAPABILITIES_URL).catch(function(err) {
-                setStatus("Failed to load agent registry: " + (err && err.message ? err.message : String(err)));
-            });
-
-            // ---- Search filter ----
-            var searchInput = document.getElementById("search-input");
-            var emptyStateEl = null;
-            function applySearchFilter() {
-                var q = (searchInput.value || "").trim().toLowerCase();
-                var cards = container.querySelectorAll(".card");
-                var visible = 0;
-                cards.forEach(function(card) {
-                    var hay = card.getAttribute("data-search") || "";
-                    var match = !q || hay.indexOf(q) !== -1;
-                    card.style.display = match ? "" : "none";
-                    if (match) visible++;
-                });
-                if (q && visible === 0 && cards.length > 0) {
-                    if (!emptyStateEl) {
-                        emptyStateEl = document.createElement("p");
-                        emptyStateEl.className = "empty-state";
-                        container.appendChild(emptyStateEl);
-                    }
-                    emptyStateEl.textContent = "No agents match “" + searchInput.value + "”.";
-                } else if (emptyStateEl) {
-                    emptyStateEl.remove();
-                    emptyStateEl = null;
-                }
-            }
-            searchInput.addEventListener("input", applySearchFilter);
-
-            // ---- Register modal ----
-            var registerBtn = document.getElementById("register-btn");
-            registerBtn.addEventListener("click", openRegisterModal);
-
-            function openRegisterModal() {
-                var defaultUrl = "https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=GetCapabilities";
-                modalContent.innerHTML =
-                    '<button class="modal-close" type="button" aria-label="Close">×</button>' +
-                    '<h2 class="modal-title">Register GAS Server</h2>' +
-                    '<p class="modal-meta">Enter the GetCapabilities URL of a GAS server. We’ll fetch every agent it publishes and add them to the catalog below.</p>' +
-                    '<form id="register-form" novalidate>' +
-                        '<div class="form-row">' +
-                            '<label class="form-label" for="register-url-input">GetCapabilities URL</label>' +
-                            '<input id="register-url-input" class="form-input" type="url" required ' +
-                                'placeholder="https://example.com/?SERVICE=GAS&VERSION=1.0.0&REQUEST=GetCapabilities" ' +
-                                'value="' + escapeHtml(defaultUrl) + '">' +
-                            <!-- '<p class="form-hint">The server must allow cross-origin requests (CORS) or be on the same origin as this page.</p>' + -->
-                        '</div>' +
-                        '<div id="register-status" class="form-status"></div>' +
-                        '<div class="form-actions">' +
-                            '<button type="button" id="register-cancel" class="secondary-btn">Cancel</button>' +
-                            '<button type="submit" id="register-submit" class="primary-btn">Register</button>' +
-                        '</div>' +
-                    '</form>';
-
-                modalContent.querySelector(".modal-close").addEventListener("click", closeModal);
-                modalContent.querySelector("#register-cancel").addEventListener("click", closeModal);
-                modalContent.querySelector("#register-form").addEventListener("submit", handleRegisterSubmit);
-                modalContent.scrollTop = 0;
-                modalOverlay.classList.add("open");
-                document.body.style.overflow = "hidden";
-                setTimeout(function() {
-                    var input = document.getElementById("register-url-input");
-                    if (input) { input.focus(); input.select(); }
-                }, 50);
-            }
-
-            function handleRegisterSubmit(e) {
-                e.preventDefault();
-                var input = document.getElementById("register-url-input");
-                var statusBox = document.getElementById("register-status");
-                var submitBtn = document.getElementById("register-submit");
-                var url = (input.value || "").trim();
-                if (!url) {
-                    statusBox.className = "form-status error";
-                    statusBox.textContent = "Please enter a URL.";
-                    return;
-                }
-
-                statusBox.className = "form-status info";
-                statusBox.textContent = "Fetching capabilities…";
-                submitBtn.disabled = true;
-                input.disabled = true;
-
-                registerServer(url)
-                    .then(function(result) {
-                        var added = (result && result.added) || 0;
-                        var dup = (result && result.duplicates) || 0;
-                        statusBox.className = "form-status success";
-                        if (added > 0) {
-                            statusBox.textContent = "Registered. Added " + added + " agent" + (added === 1 ? "" : "s") +
-                                (dup > 0 ? " (" + dup + " already in catalog)" : "") + ".";
-                        } else if (dup > 0) {
-                            statusBox.textContent = "All " + dup + " agent" + (dup === 1 ? "" : "s") + " from that server are already in the catalog.";
-                        } else {
-                            statusBox.textContent = "No agents found at that URL.";
-                        }
-                        setTimeout(closeModal, 900);
-                    })
-                    .catch(function(err) {
-                        statusBox.className = "form-status error";
-                        var msg = err && err.message ? err.message : String(err);
-                        if (/failed to fetch/i.test(msg) || /network/i.test(msg)) {
-                            msg += " — likely a CORS issue. The server must send Access-Control-Allow-Origin, or you must open this page from the same origin as the server.";
-                        }
-                        statusBox.textContent = msg;
-                        submitBtn.disabled = false;
-                        input.disabled = false;
-                    });
-            }
-        })();
-    </script>
  <p style="text-align: center; padding: 0 20px 40px; word-break: break-all;">
         <a href="https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=GetCapabilities">
             https://www.geospatial-agentic-services.online/?SERVICE=GAS&VERSION=1.0.0&REQUEST=GetCapabilities
